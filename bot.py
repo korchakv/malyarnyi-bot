@@ -237,20 +237,8 @@ def main():
     app.add_handler(CallbackQueryHandler(handle_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    port = int(os.environ.get("PORT", 8443))
-    webhook_url = os.environ.get("WEBHOOK_URL")  # e.g. https://your-app.onrender.com
-
-    if webhook_url:
-        logger.info(f"Starting webhook on port {port}")
-        app.run_webhook(
-            listen="0.0.0.0",
-            port=port,
-            webhook_url=f"{webhook_url}/webhook",
-            url_path="/webhook",
-        )
-    else:
-        logger.info("Starting polling")
-        app.run_polling()
+    logger.info("Starting polling mode")
+    app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__":
     main()
