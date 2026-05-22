@@ -1,8 +1,21 @@
 import os
+import sys
 import json
 import logging
 import asyncio
 from datetime import datetime
+
+# ── Startup diagnostics ──────────────────────────────────────────────────────
+print(f"Python version: {sys.version}", flush=True)
+print(f"Starting bot...", flush=True)
+
+required_vars = ["TELEGRAM_TOKEN", "OPENROUTER_KEY", "ADMIN_CHAT_ID"]
+missing = [v for v in required_vars if not os.environ.get(v)]
+if missing:
+    print(f"ERROR: Missing environment variables: {missing}", flush=True)
+    sys.exit(1)
+
+print("All required env vars present ✓", flush=True)
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application, CommandHandler, MessageHandler,
