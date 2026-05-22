@@ -1,3 +1,7 @@
+import traceback
+
+try:
+
 import os
     response = requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
@@ -79,3 +83,6 @@ async def chat(message: Message):
 
 if __name__ == "__main__":
     dp.run_polling(bot)
+    except Exception as e:
+    print("ERROR:")
+    traceback.print_exc()
