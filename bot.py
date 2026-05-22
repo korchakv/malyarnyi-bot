@@ -230,7 +230,7 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔄 Розмову скинуто. /start — розпочати знову.")
 
 # ── Main ─────────────────────────────────────────────────────────────────────
-def main():
+async def main():
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("reset", reset))
@@ -238,7 +238,12 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     logger.info("Starting polling mode")
-    app.run_polling(drop_pending_updates=True)
+    async with app:
+        await app.initialize()
+        await app.start()
+        await app.updater.start_polling(drop_pending_updates=True)
+        logger.info("Bot is running. Press Ctrl+C to stop.")
+        await asyncio.Event().wait()  # run forever
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
